@@ -34,3 +34,20 @@ The toolkit is designed for developers who want to build modern AI applications 
 ---
 
 ## Project Structure
+core/
+agent/
+memory/
+tools/
+
+examples/
+chatbot-agent/
+
+docs/
+architecture.md
+---
+
+## Vision
+
+The goal of this project is to provide a lightweight developer-friendly toolkit for building AI-powered applications.
+
+We aim to make AI development easier, faster and more accessible for developers.
