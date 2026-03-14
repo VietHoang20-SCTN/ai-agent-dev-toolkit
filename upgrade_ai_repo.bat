@@ -1,78 +1,81 @@
 @echo off
-title Upgrade AI Agent Repo
+title Upgrade AI Agent Repo PRO
 
-echo ==============================
-echo UPGRADING AI AGENT REPOSITORY
-echo ==============================
+echo ==================================
+echo UPGRADING AI AGENT PROJECT
+echo ==================================
 
 echo.
-echo Creating new folders...
+echo Creating new modules...
 
-mkdir src
 mkdir src\agent
 mkdir src\memory
 mkdir src\tools
 mkdir src\plugins
-mkdir tests
-mkdir .github
-mkdir .github\workflows
 
 echo.
-echo Creating Agent module...
+echo Creating OpenAI Agent...
 
-echo class Agent: > src\agent\agent.py
-echo     def __init__(self, tools=None): >> src\agent\agent.py
-echo         self.tools = tools or [] >> src\agent\agent.py
-echo. >> src\agent\agent.py
-echo     def run(self, input_text): >> src\agent\agent.py
-echo         return f"Agent response: {input_text}" >> src\agent\agent.py
-
-echo.
-echo Creating Memory module...
-
-echo class Memory: > src\memory\memory.py
-echo     def __init__(self): >> src\memory\memory.py
-echo         self.history = [] >> src\memory\memory.py
-echo. >> src\memory\memory.py
-echo     def add(self, msg): >> src\memory\memory.py
-echo         self.history.append(msg) >> src\memory\memory.py
+echo import os > src\agent\openai_agent.py
+echo from openai import OpenAI >> src\agent\openai_agent.py
+echo. >> src\agent\openai_agent.py
+echo client = OpenAI() >> src\agent\openai_agent.py
+echo. >> src\agent\openai_agent.py
+echo class OpenAIAgent: >> src\agent\openai_agent.py
+echo     def run(self, prompt): >> src\agent\openai_agent.py
+echo         response = client.chat.completions.create( >> src\agent\openai_agent.py
+echo             model="gpt-4.1-mini", >> src\agent\openai_agent.py
+echo             messages=[{"role":"user","content":prompt}] >> src\agent\openai_agent.py
+echo         ) >> src\agent\openai_agent.py
+echo         return response.choices[0].message.content >> src\agent\openai_agent.py
 
 echo.
-echo Creating Tool system...
+echo Creating CLI tool...
 
-echo class Tool: > src\tools\tool.py
-echo     def run(self, input_text): >> src\tools\tool.py
-echo         return "tool output" >> src\tools\tool.py
-
-echo.
-echo Creating Plugin system...
-
-echo class Plugin: > src\plugins\plugin.py
-echo     def execute(self): >> src\plugins\plugin.py
-echo         pass >> src\plugins\plugin.py
-
-echo.
-echo Creating test file...
-
-echo def test_agent(): > tests\test_agent.py
-echo     assert True >> tests\test_agent.py
+echo from src.agent.openai_agent import OpenAIAgent > cli.py
+echo. >> cli.py
+echo agent = OpenAIAgent() >> cli.py
+echo. >> cli.py
+echo while True: >> cli.py
+echo     prompt = input("You: ") >> cli.py
+echo. >> cli.py
+echo     if prompt == "exit": >> cli.py
+echo         break >> cli.py
+echo. >> cli.py
+echo     response = agent.run(prompt) >> cli.py
+echo     print("Agent:", response) >> cli.py
 
 echo.
-echo Creating CI workflow...
+echo Creating FastAPI API...
 
-echo name: CI > .github\workflows\ci.yml
-echo on: [push] >> .github\workflows\ci.yml
-echo jobs: >> .github\workflows\ci.yml
-echo   build: >> .github\workflows\ci.yml
-echo     runs-on: ubuntu-latest >> .github\workflows\ci.yml
-echo     steps: >> .github\workflows\ci.yml
-echo       - uses: actions/checkout@v3 >> .github\workflows\ci.yml
+echo from fastapi import FastAPI > api.py
+echo from src.agent.openai_agent import OpenAIAgent >> api.py
+echo. >> api.py
+echo app = FastAPI() >> api.py
+echo agent = OpenAIAgent() >> api.py
+echo. >> api.py
+echo @app.get("/chat") >> api.py
+echo def chat(prompt: str): >> api.py
+echo     return {"response": agent.run(prompt)} >> api.py
 
 echo.
-echo Creating requirements...
+echo Updating requirements...
 
 echo openai > requirements.txt
+echo fastapi >> requirements.txt
+echo uvicorn >> requirements.txt
 echo pydantic >> requirements.txt
+
+echo.
+echo Updating README...
+
+echo. >> README.md
+echo ## Features >> README.md
+echo - AI Agent Framework >> README.md
+echo - OpenAI integration >> README.md
+echo - CLI agent >> README.md
+echo - FastAPI chatbot API >> README.md
+echo - Plugin system >> README.md
 
 echo.
 echo Adding files to git...
@@ -82,7 +85,7 @@ git add .
 echo.
 echo Commit upgrade...
 
-git commit -m "upgrade repo to AI agent framework"
+git commit -m "upgrade repo with OpenAI agent, CLI interface and FastAPI API"
 
 echo.
 echo Pushing to GitHub...
@@ -90,8 +93,8 @@ echo Pushing to GitHub...
 git push
 
 echo.
-echo ==============================
-echo REPOSITORY UPGRADED
-echo ==============================
+echo ==================================
+echo UPGRADE COMPLETE
+echo ==================================
 
 pause
